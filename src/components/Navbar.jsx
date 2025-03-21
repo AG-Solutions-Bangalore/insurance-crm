@@ -27,6 +27,7 @@ import ChangePassword from "../pages/Profile/ChnagePassword";
 import kmrLogo from "./../assets/kmrlive.png";
 import { decryptData } from "./common/EncryptionDecryption";
 import { ButtonCancel, ButtonCss } from "./common/ButtonCss";
+import MobileBottomNav from "./common/Navbar/MobileBottomNav";
 const Transition = (props) => <Slide direction="up" {...props} />;
 
 const Navbar = ({
@@ -252,6 +253,7 @@ const Navbar = ({
         confirmPassword={confirmPassword}
         setConfirmPassword={setConfirmPassword}
       />
+      <MobileBottomNav />
     </nav>
   );
 };
