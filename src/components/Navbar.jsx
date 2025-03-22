@@ -124,83 +124,74 @@ const Navbar = ({
   };
 
   return (
-    <nav className="bg-white border-b border-gray-200 fixed w-full top-0 z-50">
-      <div className="px-4 h-16 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <img src={kmrLogo} alt="KMR Logo" className="h-8" />
-          <button
-            onClick={toggleSidebar}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors block lg:hidden"
-            aria-label="Toggle sidebar"
-          >
-            {isSidebarOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
-          </button>
-          <button
-            onClick={toggleCollapse}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors hidden lg:inline-block"
-            aria-label="Collapse sidebar"
-          >
-            {isCollapsed ? (
-              <FaChevronRight size={20} />
-            ) : (
-              <FaChevronLeft size={20} />
-            )}
-          </button>
-        </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={toggleFullscreen}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors hidden lg:block"
-            aria-label="Toggle fullscreen"
-          >
-            {isFullscreen ? <FaCompress size={20} /> : <FaExpand size={20} />}
-          </button>
-          <div className="relative">
-            <IconButton
-              onClick={handleClick}
-              aria-label="Profile Menu"
-              className="p-2 rounded-lg bg-blue-600 hover:bg-blue-700 transition-all duration-300 shadow-md text-white"
+    <nav className="bg-white border-b border-gray-200 fixed w-full top-0 z-50 ">
+      <div className="hidden md:block">
+        <div className="px-4 h-16 flex items-center justify-between ">
+          <div className="flex items-center gap-3">
+            <img src={kmrLogo} alt="KMR Logo" className="h-8" />
+            <button
+              onClick={toggleSidebar}
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors block lg:hidden"
+              aria-label="Toggle sidebar"
             >
-              <FaUserCircle size={28} />
-            </IconButton>
-
-            <Menu
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              slotProps={{
-                paper: {
-                  className:
-                    "shadow-xl rounded-lg border border-gray-200 bg-white min-w-[180px] p-1",
-                },
-              }}
+              {isSidebarOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
+            </button>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={toggleFullscreen}
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors hidden lg:block"
+              aria-label="Toggle fullscreen"
             >
-              {/* Change Password */}
-              <ListItemButton
-                onClick={() => {
-                  handleClose();
-                  setOpenDialog(true);
-                }}
-                className="flex items-center space-x-2 px-4 py-2 rounded-md hover:bg-blue-100 transition-all duration-300"
+              {isFullscreen ? <FaCompress size={20} /> : <FaExpand size={20} />}
+            </button>
+            <div className="relative">
+              <IconButton
+                onClick={handleClick}
+                aria-label="Profile Menu"
+                className="p-2 rounded-lg bg-blue-600 hover:bg-blue-700 transition-all duration-300 shadow-md text-white"
               >
-                <MdLock className="text-blue-600" size={22} />
-                <span className="text-gray-700 font-medium">
-                  Change Password
-                </span>
-              </ListItemButton>
+                <FaUserCircle size={28} />
+              </IconButton>
 
-              {/* Logout */}
-              <ListItemButton
-                onClick={() => {
-                  handleClose();
-                  setIsLogoutDialogOpen(true);
+              <Menu
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                slotProps={{
+                  paper: {
+                    className:
+                      "shadow-xl rounded-lg border border-gray-200 bg-white min-w-[180px] p-1",
+                  },
                 }}
-                className="flex items-center space-x-2 px-4 py-2 rounded-md hover:bg-red-100 transition-all duration-300"
               >
-                <MdLogout className="text-red-600" size={22} />
-                <span className="text-gray-700 font-medium">Logout</span>
-              </ListItemButton>
-            </Menu>
+                {/* Change Password */}
+                <ListItemButton
+                  onClick={() => {
+                    handleClose();
+                    setOpenDialog(true);
+                  }}
+                  className="flex items-center space-x-2 px-4 py-2 rounded-md hover:bg-blue-100 transition-all duration-300"
+                >
+                  <MdLock className="text-blue-600" size={22} />
+                  <span className="text-gray-700 font-medium">
+                    Change Password
+                  </span>
+                </ListItemButton>
+
+                {/* Logout */}
+                <ListItemButton
+                  onClick={() => {
+                    handleClose();
+                    setIsLogoutDialogOpen(true);
+                  }}
+                  className="flex items-center space-x-2 px-4 py-2 rounded-md hover:bg-red-100 transition-all duration-300"
+                >
+                  <MdLogout className="text-red-600" size={22} />
+                  <span className="text-gray-700 font-medium">Logout</span>
+                </ListItemButton>
+              </Menu>
+            </div>
           </div>
         </div>
       </div>
@@ -253,7 +244,7 @@ const Navbar = ({
         confirmPassword={confirmPassword}
         setConfirmPassword={setConfirmPassword}
       />
-      <MobileBottomNav />
+      {/* <MobileBottomNav /> */}
     </nav>
   );
 };

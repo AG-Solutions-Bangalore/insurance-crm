@@ -12,9 +12,7 @@ const TextField = ({
   width,
 }) => {
   return (
-    <div
-      className={`${width == "full" ? "w-full" : "max-w-sm min-w-[200px]"}`}
-    >
+    <div className={`${width == "full" ? "w-full" : "max-w-sm min-w-[200px]"}`}>
       {label && (
         <label className="block text-sm font-medium text-gray-700 mb-1">
           {label} {required && <span className="text-red-500">*</span>}

@@ -1,17 +1,8 @@
 import React, { useEffect, useState } from "react";
-import Layout from "../../components/Layout";
 import CountUp from "react-countup";
-import {
-  FiUsers,
-  FiClock,
-  FiHeart,
-  FiTruck,
-  FiShield,
-  FiPackage,
-} from "react-icons/fi";
 import { Finacal_Year } from "../../config/BaseUrl";
 import { FETCH_DASHBOARD_DATA } from "../api/UseApi";
-import { Home } from "@mui/icons-material";
+import Layout from "../../components/Layout";
 
 const Dashboard = () => {
   const [results, setResults] = useState({});
@@ -20,106 +11,111 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await FETCH_DASHBOARD_DATA();
-        setResults(response.data);
+        const response = await FETCH_DASHBOARD_DATA(); // Fetch data from API
+        setResults(response.data); // Set the response data to state
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
       } finally {
-        setLoading(false);
+        setLoading(false); // Ensure loading is false after fetching
       }
     };
+
     fetchData();
-  }, [Finacal_Year]);
+  }, [Finacal_Year]); // Refetch data if financial year changes
 
   const stats = [
     {
-      title: "Total Follow-Up",
+      title: "Today Followups",
       value: results?.todayFollowup || 0,
-      color: "border-green-500 bg-green-100",
-      iconColor: "bg-green-500",
-      icon: <FiUsers size={24} className="text-white" />,
+      color: "from-blue-500 to-indigo-500",
     },
     {
-      title: "Old Follow-Up",
+      title: "Missed (old) Followups",
       value: results?.oldFollowup || 0,
-      color: "border-blue-500 bg-blue-100",
-      iconColor: "bg-blue-500",
-      icon: <FiClock size={24} className="text-white" />,
+      color: "from-red-400 to-pink-500",
+    },
+  ];
+
+  const pendingRenewals = [
+    {
+      title: "Vehicle Insurance",
+      value: results?.vehicleinsurance || 0,
+      color: "from-green-400 to-teal-500",
     },
     {
       title: "Health Insurance",
       value: results?.healthinsurance || 0,
-      color: "border-yellow-500 bg-yellow-100",
-      iconColor: "bg-yellow-500",
-      icon: <FiHeart size={24} className="text-white" />,
+      color: "from-yellow-400 to-orange-500",
     },
     {
-      title: "Vehicle Insurance",
-      value: results?.vehicleinsurance || 0,
-      color: "border-red-500 bg-red-100",
-      iconColor: "bg-red-500",
-      icon: <FiTruck size={24} className="text-white" />,
-    },
-    {
-      title: "License Insurance",
+      title: "LIC Premium",
       value: results?.licinsurance || 0,
-      color: "border-purple-500 bg-purple-100",
-      iconColor: "bg-purple-500",
-      icon: <FiShield size={24} className="text-white" />,
+      color: "from-red-400 to-pink-500",
     },
     {
       title: "Other Insurance",
       value: results?.otherinsurance || 0,
-      color: "border-orange-500 bg-orange-100",
-      iconColor: "bg-orange-500",
-      icon: <FiPackage size={24} className="text-white" />,
+      color: "from-blue-400 to-cyan-500",
     },
   ];
 
   return (
     <Layout>
-      <div className="p-4 space-y-6">
-        <div className="relative bg-white shadow-lg rounded-xl p-6 flex items-center space-x-4 border-l-8 border-r-8 border-blue-500">
-          {/* Icon Section */}
-          <div className="p-4 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full shadow-md">
-            <Home size={32} className="text-white" />
-          </div>
-
-          {/* Text Section */}
+      <div className="p-4 space-y-4">
+        <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-xl font-extrabold text-gray-800 uppercase tracking-wide">
-              Dashboard
-            </h1>
-            <p className="text-sm text-gray-500 mt-1">
-              Your business insights at a glance
-            </p>
+            <p className="text-gray-500 text-sm">Monday</p>
+            <h1 className="text-xl font-bold">25 October</h1>
+            <h2 className="text-2xl font-bold mt-2">Hi Kishore</h2>
+            <p className="text-gray-500 text-sm">85 Tasks are pending</p>
+          </div>
+          <div className="relative">
+            <img
+              src="/profile.jpg"
+              alt="User"
+              className="w-16 h-16 rounded-full border-2 border-gray-200"
+            />
+            <span className="absolute top-1 right-1 w-3 h-3 bg-red-500 rounded-full"></span>
           </div>
         </div>
 
-        {/* Stats Section */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {stats.map((stat, index) => (
-            <div
-              key={index}
-              className={`flex items-center space-x-4 p-4 border-l-4 border-r-4 rounded-xl shadow-md hover:shadow-lg transform transition hover:scale-105 ${stat.color}`}
-            >
-              <div className={`p-3 rounded-full ${stat.iconColor} shadow-md`}>
-                {stat.icon}
+        {/* Show Loading Spinner */}
+        {loading ? (
+          <div className="text-center text-gray-600 font-semibold text-lg">
+            Loading...
+          </div>
+        ) : (
+          <>
+            {/* Followups */}
+            {stats.map((stat, index) => (
+              <div
+                key={index}
+                className={`flex justify-between items-center p-4 rounded-xl shadow-md text-white bg-gradient-to-r ${stat.color}`}
+              >
+                <p className="text-lg font-semibold">{stat.title}</p>
+                <h2 className="text-3xl font-bold">
+                  <CountUp start={0} end={stat.value} duration={2} />
+                </h2>
               </div>
-              <div>
-                <p className="text-xs text-gray-600">{stat.title}</p>
-                <p className="text-xl font-semibold">
-                  <CountUp
-                    start={0}
-                    end={stat.value}
-                    duration={2.5}
-                    useEasing={true}
-                  />
-                </p>
-              </div>
+            ))}
+
+            {/* Pending Renewals */}
+            <h2 className="text-xl font-bold mt-4">Pending Renewals</h2>
+            <div className="grid grid-cols-2 gap-4">
+              {pendingRenewals.map((renewal, index) => (
+                <div
+                  key={index}
+                  className={`p-4 rounded-xl text-white shadow-md text-center bg-gradient-to-r ${renewal.color}`}
+                >
+                  <h2 className="text-3xl font-bold">
+                    <CountUp start={0} end={renewal.value} duration={2} />
+                  </h2>
+                  <p className="text-sm">{renewal.title}</p>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </>
+        )}
       </div>
     </Layout>
   );
