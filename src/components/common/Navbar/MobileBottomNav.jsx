@@ -110,9 +110,10 @@ const MobileBottomNav = () => {
           icon: <IconCalendarWeek size={22} />,
           path: [
             "/client-list",
-            "/policy-list/",
+            "/policy-list",
             "/client-create",
             "/client-update",
+            "/policy-update",
           ],
         },
         {
