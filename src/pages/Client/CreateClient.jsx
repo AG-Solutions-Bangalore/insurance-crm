@@ -1,46 +1,103 @@
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Slide,
-} from "@mui/material";
 import React, { useEffect, useState } from "react";
-import TextField from "../../components/common/InputField";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { toast } from "sonner";
 import ButtonConfigColor from "../../components/common/ButtonConfig";
-import { INSURANCE_STATUS, UPDATE_POLICY_RENEWAL } from "../api/UseApi";
+import { decryptId } from "../../components/common/EncryptionDecryption";
+import TextField from "../../components/common/InputField";
+import PageHeader from "../../components/common/PageHeader";
+import PageLayout from "../../components/common/PageLayout";
+import Layout from "../../components/Layout";
+import {
+  CLIENT_TYPE,
+  CREATE_CLIENT,
+  FETCH_CLIENT_BY_ID,
+  UPDATE_CLIENT,
+} from "../api/UseApi";
+import LoaderComponent from "../../components/common/LoaderComponent";
 
-const UpdatePolicyRenewal = ({ formData, open, onClose, handleChange }) => {
-  const [policystatus, setPolicyStatus] = useState([]);
+const CreateClient = () => {
+  const { id } = useParams(); // Only get the `id` param
+  const location = useLocation(); // Get the full location object
+  const navigate = useNavigate();
+  const decryptedId = decryptId(id);
+  const [loadingdata, setLoadingData] = useState(false);
+
+  const searchParams = new URLSearchParams(location.search);
+  const isEditing = searchParams.get("isedit") == "true";
+
+  const [clienttype, setClientType] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    client_name: "",
+    client_mobile: "",
+    client_email_id: "",
+    client_area: "",
+    client_type: "",
+    client_status: isEditing ? "" : undefined,
+  });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "client_mobile" && !/^\d{0,10}$/.test(value)) {
+      return;
+    }
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
+  // Fetch client types
   useEffect(() => {
-    if (open) {
-      const fetchPolicyStatus = async () => {
+    const fetchClientTypes = async () => {
+      try {
+        const response = await CLIENT_TYPE();
+        setClientType(response?.data?.clientType || []);
+      } catch (error) {
+        console.error("Error fetching client types:", error);
+      }
+    };
+
+    fetchClientTypes();
+  }, []);
+
+  // Fetch client data if editing
+  useEffect(() => {
+    if (isEditing) {
+      const fetchClientById = async () => {
+        setLoadingData(true);
+
         try {
-          const response = await INSURANCE_STATUS();
-          setPolicyStatus(response?.data?.insuranceStatus || []);
+          const response = await FETCH_CLIENT_BY_ID(decryptedId);
+          setFormData(response.data.client || {});
         } catch (error) {
-          console.error("Error fetching client types:", error);
+          console.error("Error fetching client data:", error);
+        } finally {
+          setLoadingData(false);
         }
       };
-      fetchPolicyStatus();
-    }
-  }, [open]);
 
-  const Update = async (e) => {
+      fetchClientById();
+    }
+  }, [isEditing, decryptedId]);
+
+  // Handle form submission
+  const onSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const response = await UPDATE_POLICY_RENEWAL(id, formData);
+      let response;
+      if (isEditing) {
+        response = await UPDATE_CLIENT(decryptedId, formData);
+      } else {
+        response = await CREATE_CLIENT(formData);
+      }
 
       if (response.data.code === 200) {
-        toast.success(response.data.msg || "Update Policy successfully");
-        // navigate("/client-list");
-        onClose();
+        toast.success(response.data.msg || "Client saved successfully");
+        navigate("/client-list");
       } else {
-        toast.error(response.data.msg || "Error saving Policy");
+        toast.error(response.data.msg || "Error saving client");
       }
     } catch (error) {
       toast.error(error.response?.data?.msg || "An error occurred");
@@ -48,63 +105,98 @@ const UpdatePolicyRenewal = ({ formData, open, onClose, handleChange }) => {
       setLoading(false);
     }
   };
+
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      fullWidth
-      TransitionComponent={Slide}
-      transitionDuration={500}
-      sx={{ backdropFilter: "blur(4px)" }}
-      maxWidth="sm"
-    >
-      <DialogTitle>Update Policy Renewal</DialogTitle>
-      <DialogContent>
-        <form className="space-y-4">
-          <TextField
-            type="date"
-            label="Insurance Date"
-            name="insurance_followup_date"
-            placeholder="Enter Insurance Date..."
-            value={formData.insurance_followup_date}
-            onChange={handleChange}
-            required
-            width="full"
-          />
-          <TextField
-            label="Status"
-            name="insurance_status"
-            type="select"
-            placeholder="Choose Insurance Status"
-            value={formData.insurance_status}
-            onChange={handleChange}
-            options={policystatus.map((type) => ({
-              value: type.insurance_status,
-              label: type.insurance_status,
-            }))}
-            required
-            width="full"
-          />
-        </form>
-      </DialogContent>
-      <DialogActions>
-        <div className="space-x-3 my-4 flex justify-center">
-          <ButtonConfigColor
-            loading={loading}
-            type="submit"
-            buttontype="submit"
-            label={"Submit"}
-          />
-          <ButtonConfigColor
-            type="button"
-            buttontype="back"
-            label="Back"
-            onClick={onClose}
-          />
-        </div>
-      </DialogActions>
-    </Dialog>
+    <Layout>
+      <div>
+        <PageHeader title={isEditing ? "Edit Client" : "Create Client"} />
+        {loadingdata ? (
+          <LoaderComponent />
+        ) : (
+          <PageLayout>
+            <form onSubmit={onSubmit}>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <TextField
+                  label="Client Name"
+                  name="client_name"
+                  placeholder="Enter Client Name..."
+                  value={formData.client_name}
+                  onChange={handleChange}
+                  required
+                />
+                <TextField
+                  label="Client Mobile"
+                  name="client_mobile"
+                  placeholder="Enter Client Mobile..."
+                  value={formData.client_mobile}
+                  onChange={handleChange}
+                  required
+                />
+                <TextField
+                  type="email"
+                  label="Client Email"
+                  name="client_email_id"
+                  placeholder="Enter Client Email..."
+                  value={formData.client_email_id}
+                  onChange={handleChange}
+                  required
+                />
+                <TextField
+                  label="Client Area"
+                  name="client_area"
+                  placeholder="Enter Client Area..."
+                  value={formData.client_area}
+                  onChange={handleChange}
+                  required
+                />
+                <TextField
+                  label="Client Type"
+                  name="client_type"
+                  type="select"
+                  placeholder="Choose Client Type"
+                  value={formData.client_type}
+                  onChange={handleChange}
+                  options={clienttype.map((type) => ({
+                    value: type.client_type,
+                    label: type.client_type,
+                  }))}
+                  required
+                />
+                {isEditing && (
+                  <TextField
+                    label="Client Status"
+                    name="client_status"
+                    type="select"
+                    placeholder="Choose Client Status"
+                    value={formData.client_status}
+                    onChange={handleChange}
+                    options={[
+                      { label: "Active", value: "Active" },
+                      { label: "Inactive", value: "Inactive" },
+                    ]}
+                  />
+                )}
+              </div>
+              <div className="space-x-3 my-4 flex justify-center">
+                <ButtonConfigColor
+                  loading={loading}
+                  type="submit"
+                  buttontype="submit"
+                  label={isEditing ? "Update" : "Submit"}
+                />
+                <ButtonConfigColor
+                  type="button"
+                  buttontype="back"
+                  label="Back"
+                  onClick={() => navigate(-1)}
+                />
+              </div>
+            </form>
+          </PageLayout>
+        )}
+      </div>
+    </Layout>
   );
 };
 
-export default UpdatePolicyRenewal;
+export default CreateClient;

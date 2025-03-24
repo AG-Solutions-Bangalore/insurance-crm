@@ -1,53 +1,15 @@
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Slide,
-} from "@mui/material";
+import { Dialog, DialogContent, DialogTitle, Slide } from "@mui/material";
 import React from "react";
-import { ButtonCancel, ButtonCss } from "../../components/common/ButtonCss";
+import ButtonConfigColor from "../../components/common/ButtonConfig";
+import TextField from "../../components/common/InputField";
 
-// Reusable Input Component
-const InputField = ({
-  label,
-  value,
-  onChange,
-  type = "text",
-  placeholder,
-  required,
-  validate,
-}) => (
-  <div>
-    <label className="block text-sm font-medium text-gray-700 mb-2">
-      {label}
-    </label>
-    <input
-      type={type}
-      value={value}
-      onChange={(e) => {
-        if (!validate || validate(e.target.value)) {
-          onChange(e.target.value);
-        }
-      }}
-      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-accent-500 transition-all"
-      placeholder={placeholder}
-      required={required}
-    />
-  </div>
-);
-
-// Main ChangePassword Component
 const ChangePassword = ({
   open,
   onClose,
   onChangePassword,
-  oldPassword,
-  setOldPassword,
-  newPassword,
-  setNewPassword,
-  confirmPassword,
-  setConfirmPassword,
+  loadingdata,
+  handleChange,
+  formData = {},
 }) => {
   return (
     <>
@@ -58,42 +20,54 @@ const ChangePassword = ({
         TransitionComponent={Slide}
         transitionDuration={500}
         sx={{ backdropFilter: "blur(4px)" }}
+        maxWidth="sm"
       >
         <DialogTitle>Change Password</DialogTitle>
         <DialogContent>
           <form onSubmit={onChangePassword} className="space-y-4">
-            <InputField
+            <TextField
               label="Old Password"
               type="password"
-              value={oldPassword}
-              onChange={setOldPassword}
+              name="old_password"
+              value={formData?.old_password || ""}
+              onChange={handleChange}
               required
+              width="full"
             />
-            <InputField
+            <TextField
               label="New Password"
               type="password"
-              value={newPassword}
-              onChange={setNewPassword}
+              name="password"
+              value={formData?.password || ""}
+              onChange={handleChange}
               required
-              // validate={(value) => value.length >= 8}
+              width="full"
             />
-            <InputField
+            <TextField
               label="Confirm Password"
               type="password"
-              value={confirmPassword}
-              onChange={setConfirmPassword}
+              name="conform_password"
+              value={formData?.conform_password || ""}
+              onChange={handleChange}
               required
+              width="full"
             />
+            <div className="flex flex-col items-center justify-center space-y-3 md:space-y-0 my-4 md:flex-row md:space-x-3">
+              <ButtonConfigColor
+                loading={loadingdata}
+                type="submit"
+                buttontype="normal"
+                label={"Change Password"}
+              />
+              <ButtonConfigColor
+                type="button"
+                buttontype="back"
+                label="Back"
+                onClick={onClose}
+              />
+            </div>
           </form>
         </DialogContent>
-        <DialogActions>
-          <button onClick={onClose} className={ButtonCancel}>
-            Cancel
-          </button>
-          <button onClick={onChangePassword} className={ButtonCss}>
-            Change Password
-          </button>
-        </DialogActions>
       </Dialog>
     </>
   );

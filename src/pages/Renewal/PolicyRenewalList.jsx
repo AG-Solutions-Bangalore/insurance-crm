@@ -1,20 +1,27 @@
-import { Chip, Tooltip } from "@mui/material";
-import { IconEdit } from "@tabler/icons-react";
-import moment from "moment/moment";
-import MUIDataTable from "mui-datatables";
+import { Chip } from "@mui/material";
+import {
+  IconCalendar,
+  IconCalendarMonth,
+  IconCircleChevronRight,
+} from "@tabler/icons-react";
+import moment from "moment";
 import React, { useEffect, useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { encryptId } from "../../components/common/EncryptionDecryption";
+import ButtonConfigColor from "../../components/common/ButtonConfig";
+import TextField from "../../components/common/InputField";
 import LoaderComponent from "../../components/common/LoaderComponent";
+import { NoDataCard } from "../../components/common/NoDataCard";
 import Layout from "../../components/Layout";
-import { POLICY_RENEWAL, UPDATE_POLICY_RENEWAL } from "../api/UseApi";
+import { POLICY_RENEWAL } from "../api/UseApi";
 import UpdatePolicyRenewal from "./UpdatePolicyRenewal";
+import { useNavigate } from "react-router-dom";
 
 const PolicyRenewalList = () => {
   const [policyData, setPolicyData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedChip, setSelectedChip] = useState("All");
   const [openDialog, setOpenDialog] = useState(false);
-
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     insurance_followup_date: "",
     insurance_status: "",
@@ -28,16 +35,13 @@ const PolicyRenewalList = () => {
       [name]: value,
     }));
   };
-  console.log(formData);
   const fetchPolicy = async () => {
     try {
       setLoading(true);
       const response = await POLICY_RENEWAL();
-
       setPolicyData(response?.data?.insurance || []);
-      // setFormData(response?.data?.insurance || {});
     } catch (error) {
-      console.error("Error fetching vendor data:", error);
+      console.error("Error fetching policy data:", error);
     } finally {
       setLoading(false);
     }
@@ -45,6 +49,7 @@ const PolicyRenewalList = () => {
   useEffect(() => {
     fetchPolicy();
   }, []);
+
   const handleEdit = (id) => {
     const selectedData = policyData.find((item) => item.id === id);
     if (selectedData) {
@@ -53,183 +58,150 @@ const PolicyRenewalList = () => {
     }
   };
 
-  const columns = useMemo(
-    () => [
-      {
-        name: "client_name",
-        label: "Client Name",
-        options: {
-          filter: false,
-          searchable: true,
-          sort: false,
-        },
-      },
-
-      {
-        name: "client_mobile",
-        label: "Client Mobile",
-        options: {
-          filter: true,
-          sort: false,
-        },
-      },
-      {
-        name: "insurance_from",
-        label: "Insurance From",
-        options: {
-          filter: true,
-          sort: false,
-        },
-      },
-
-      {
-        name: "insurance_expire_date",
-        label: "Expire Date",
-        options: {
-          filter: true,
-          display: "exclude",
-          viewColumns: false,
-          searchable: true,
-          sort: false,
-          customBodyRender: (value) => {
-            return value ? moment(value).format("DD-MM-YYYY") : "N/A";
-          },
-        },
-      },
-      {
-        name: "insurance_followup_date",
-        label: "Followup Date",
-        options: {
-          filter: true,
-          display: "exclude",
-          viewColumns: false,
-          searchable: true,
-          sort: false,
-          customBodyRender: (value) => {
-            return value ? moment(value).format("DD-MM-YYYY") : "N/A";
-          },
-        },
-      },
-      {
-        name: "combined1",
-        label: "Expire Date/Followup Date",
-        options: {
-          filter: false,
-          sort: false,
-          customBodyRender: (value, tableMeta) => {
-            const insurancedate = tableMeta.rowData[3];
-            const followupDate = tableMeta.rowData[4];
-
-            // Format date or show "N/A" if empty
-            const formattedInsuranceDate = insurancedate
-              ? moment(insurancedate).format("DD-MM-YYYY")
-              : "";
-            const formattedFollowupDate = followupDate
-              ? moment(followupDate).format("DD-MM-YYYY")
-              : "";
-
-            return (
-              <div className="flex flex-col w-32">
-                <span>{formattedInsuranceDate}</span>
-                <span>{formattedFollowupDate}</span>
-              </div>
-            );
-          },
-        },
-      },
-      {
-        name: "insurance_status",
-        label: "Status",
-        filter: false,
-        sort: false,
-        options: {
-          customBodyRender: (value) => {
-            const insurance_status = value || "Unknown";
-
-            const statusColors = {
-              Cancel: "error",
-              Completed: "success",
-              Expired: "warning",
-              "Out of Town": "info",
-              Pending: "primary",
-              Unknown: "default",
-            };
-
-            return (
-              <Chip
-                label={insurance_status}
-                color={statusColors[insurance_status] || "default"}
-                size="small"
-                variant="filled"
-                sx={{
-                  fontWeight: "bold",
-                  textTransform: "capitalize",
-                }}
-              />
-            );
-          },
-        },
-      },
-
-      {
-        name: "id",
-        label: "Actions",
-        options: {
-          filter: false,
-          sort: false,
-          customBodyRender: (value, tableMeta) => {
-            return (
-              <Tooltip title="Edit" placement="top">
-                <button
-                  onClick={() => handleEdit(value)}
-                  className="text-gray-500 hover:text-accent-500 transition-colors"
-                >
-                  <IconEdit className="text-gray-500 hover:text-accent-500 transition-colors w-5 h-5" />
-                </button>
-              </Tooltip>
-            );
-          },
-        },
-      },
-    ],
-    [policyData]
-  );
-
-  // Table options
-  const options = {
-    selectableRows: "none",
-    elevation: 0,
-    responsive: "standard",
-    viewColumns: false,
-    download: false,
-    print: false,
-    textLabels: {
-      body: {
-        noMatch: loading ? <LoaderComponent /> : "Sorry, no data available",
-      },
-    },
-    setRowProps: (row) => ({
-      className: "hover:bg-gray-50 transition-colors",
-    }),
-    setTableProps: () => ({
-      className: "rounded-lg shadow-sm border border-gray-200",
-    }),
+  const handleChipClick = (insuranceType) => {
+    setSelectedChip(insuranceType);
   };
 
-  const data = useMemo(() => policyData, [policyData]);
+  const insuranceTypes = [
+    "All",
+    ...new Set(policyData.map((client) => client.insurance_type.split(" ")[0])),
+  ];
 
+  const filteredClients = useMemo(() => {
+    const lowerSearchTerm = searchTerm.toLowerCase();
+
+    return policyData.filter((client) => {
+      const matchesSearch =
+        client.client_name.toLowerCase().includes(lowerSearchTerm) ||
+        client.client_mobile.toLowerCase().includes(lowerSearchTerm) ||
+        client.insurance_from.toLowerCase().includes(lowerSearchTerm) ||
+        client.insurance_status.toLowerCase().includes(lowerSearchTerm) ||
+        client.insurance_type.toLowerCase().includes(lowerSearchTerm) ||
+        moment(client.insurance_expire_date)
+          .format("DD MMM, YYYY")
+          .toLowerCase()
+          .includes(lowerSearchTerm) ||
+        moment(client.insurance_followup_date)
+          .format("DD MMM, YYYY")
+          .toLowerCase()
+          .includes(lowerSearchTerm);
+
+      const matchesChip =
+        selectedChip === "All" || client.insurance_type.includes(selectedChip);
+
+      return matchesSearch && matchesChip;
+    });
+  }, [policyData, searchTerm, selectedChip]);
+  const statusColors = {
+    Cancel: "error",
+    Completed: "success",
+    Expired: "warning",
+    "Out of Town": "info",
+    Pending: "primary",
+    Unknown: "default",
+  };
   return (
     <Layout>
-      <div className="p-2 bg-gray-50 min-h-screen space-y-3">
-        <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
-          <MUIDataTable
-            title="Policy Renewal  List"
-            data={data || []}
-            columns={columns}
-            options={options}
-          />
+      <div>
+        <TextField
+          type="text"
+          placeholder="Search client or policy"
+          width="full"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+
+        <div className="mt-3 flex flex-wrap gap-2">
+          {insuranceTypes.map((type) => (
+            <Chip
+              key={type}
+              label={type}
+              color={selectedChip === type ? "primary" : "default"}
+              size="small"
+              variant="outlined"
+              onClick={() => handleChipClick(type)}
+              sx={{
+                fontWeight: "bold",
+                textTransform: "capitalize",
+                cursor: "pointer",
+                padding: "10px",
+                color: selectedChip === type ? "primary.light" : "gray",
+              }}
+            />
+          ))}
         </div>
+
+        {loading ? (
+          <LoaderComponent />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+            {filteredClients.length > 0 ? (
+              filteredClients.map((client) => (
+                <div
+                  key={client.id}
+                  className="bg-white rounded-lg shadow-md p-4 cursor-pointer hover:shadow-lg transition"
+                >
+                  <div className="flex justify-between items-center text-sm">
+                    <div>
+                      <h3 className="font-bold">{client.client_name}</h3>
+                      <p className="text-gray-500">{client.client_mobile}</p>
+                    </div>
+                    <div className="text-right space-y-1">
+                      <p className=" text-blue-400 flex items-center gap-1">
+                        <IconCalendarMonth size={16} />{" "}
+                        {moment(client.insurance_from).format("DD MMM, YYYY")}
+                      </p>
+                      <p className=" text-yellow-400 flex items-center gap-1">
+                        <IconCalendar size={16} />{" "}
+                        {moment(client.client_create_date).format(
+                          "DD MMM, YYYY"
+                        )}
+                      </p>
+                    </div>
+                  </div>
+
+                  <hr className="my-2 border-gray-300" />
+
+                  <div className="flex justify-between items-center">
+                    <p className="text-sm text-gray-400">
+                      <Chip
+                        label={client.insurance_status}
+                        color={
+                          statusColors[client.insurance_status] || "default"
+                        }
+                        size="small"
+                        variant="filled"
+                        sx={{
+                          fontWeight: "bold",
+                          textTransform: "capitalize",
+                        }}
+                      />
+                    </p>
+                    <p className="flex space-x-2 items-center">
+                      <IconCircleChevronRight
+                        className="text-gray-400 cursor-pointer"
+                        onClick={() => handleEdit(client.id)}
+                      />
+                    </p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <NoDataCard message="No clients found." />
+            )}
+          </div>
+        )}
+
+        {/* 🔹 Add New Client Button */}
+        <ButtonConfigColor
+          className="fixed bottom-20 right-0 bg-blue-500 text-white rounded-l-full p-3 shadow-lg flex items-center gap-2 w-32"
+          type={"button"}
+          buttontype={"create"}
+          onClick={() => navigate("/client-create")}
+          label={"Add New"}
+        />
       </div>
+
       <UpdatePolicyRenewal
         setFormData={setFormData}
         formData={formData}

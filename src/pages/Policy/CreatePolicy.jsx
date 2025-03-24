@@ -17,7 +17,7 @@ import {
   INSURANCE_TYPE,
   UPDATE_POLICY,
 } from "../api/UseApi";
-import { EditLoaderComponent } from "../../components/common/LoaderComponent";
+import LoaderComponent from "../../components/common/LoaderComponent";
 
 const CreatePolicy = () => {
   const [insurancetype, setInsuranceType] = useState([]);
@@ -141,7 +141,7 @@ const CreatePolicy = () => {
       <div>
         <PageHeader title={isEditing ? "Edit Policy" : "Create Policy"} />
         {loadingdata ? (
-          <EditLoaderComponent />
+          <LoaderComponent />
         ) : (
           <PageLayout>
             <form onSubmit={onSubmit}>

@@ -1,246 +1,113 @@
-import { Chip, Tooltip } from "@mui/material";
-import { IconEdit } from "@tabler/icons-react";
-import moment from "moment/moment";
-import MUIDataTable from "mui-datatables";
-import React, { useEffect, useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import ButtonConfigColor from "../../components/common/ButtonConfig";
 import {
-  decryptId,
-  encryptId,
-} from "../../components/common/EncryptionDecryption";
+  IconCalendar,
+  IconCircleChevronRight,
+  IconPhone,
+} from "@tabler/icons-react";
+import moment from "moment";
+import React, { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import ButtonConfigColor from "../../components/common/ButtonConfig";
+import { encryptId } from "../../components/common/EncryptionDecryption";
 import LoaderComponent from "../../components/common/LoaderComponent";
-import Layout from "../../components/Layout";
-import { POLICY_RENEWAL } from "../api/UseApi";
-import UpdatePolicyRenewal from "./UpdatePolicyRenewal";
+import { CLIENT_LIST } from "../api/UseApi";
 
-const PolicyRenewalList = () => {
-  const [openDialog, setOpenDialog] = useState(false);
-  const [policyData, setPolicyData] = useState([]);
+const ClientList = () => {
+  const [clientData, setClientData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [loadingdata, setLoadingData] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
-  const { id } = useParams();
-  const [formData, setFormData] = {
-    insurance_followup_date: "",
-    insurance_status: "",
-  };
+
   useEffect(() => {
-    const fetchPolicy = async () => {
+    const fetchClients = async () => {
       try {
         setLoading(true);
-        const response = await POLICY_RENEWAL();
-
-        if (
-          response?.data?.insurance &&
-          Array.isArray(response.data.insurance)
-        ) {
-          setPolicyData(response.data.insurance);
-        } else {
-          setPolicyData([]); // Ensure it's always an array
-        }
+        const response = await CLIENT_LIST();
+        setClientData(response?.data?.client || []);
       } catch (error) {
-        console.error("Error fetching vendor data:", error);
-        setPolicyData([]); // Avoid undefined errors
+        console.error("Error fetching client data:", error);
       } finally {
         setLoading(false);
       }
     };
-
-    fetchPolicy();
+    fetchClients();
   }, []);
 
-  const columns = useMemo(
-    () => [
-      {
-        name: "client_name",
-        label: "Client Name",
-        options: {
-          filter: false,
-          searchable: true,
-          sort: false,
-        },
-      },
-
-      {
-        name: "client_mobile",
-        label: "Client Mobile",
-        options: {
-          filter: true,
-          sort: false,
-        },
-      },
-      {
-        name: "insurance_from",
-        label: "Insurance From",
-        options: {
-          filter: true,
-          sort: false,
-        },
-      },
-
-      {
-        name: "insurance_expire_date",
-        label: "Expire Date",
-        options: {
-          filter: true,
-          display: "exclude",
-          viewColumns: false,
-          searchable: true,
-          sort: false,
-          customBodyRender: (value) => {
-            return value ? moment(value).format("DD-MM-YYYY") : "N/A";
-          },
-        },
-      },
-      {
-        name: "insurance_followup_date",
-        label: "Followup Date",
-        options: {
-          filter: true,
-          display: "exclude",
-          viewColumns: false,
-          searchable: true,
-          sort: false,
-          customBodyRender: (value) => {
-            return value ? moment(value).format("DD-MM-YYYY") : "N/A";
-          },
-        },
-      },
-      {
-        name: "combined1",
-        label: "Expire Date/Followup Date",
-        options: {
-          filter: false,
-          sort: false,
-          customBodyRender: (value, tableMeta) => {
-            const insurancedate = tableMeta.rowData[3];
-            const followupDate = tableMeta.rowData[4];
-
-            // Format date or show "N/A" if empty
-            const formattedInsuranceDate = insurancedate
-              ? moment(insurancedate).format("DD-MM-YYYY")
-              : "";
-            const formattedFollowupDate = followupDate
-              ? moment(followupDate).format("DD-MM-YYYY")
-              : "";
-
-            return (
-              <div className="flex flex-col w-32">
-                <span>{formattedInsuranceDate}</span>
-                <span>{formattedFollowupDate}</span>
-              </div>
-            );
-          },
-        },
-      },
-      {
-        name: "insurance_status",
-        label: "Status",
-        filter: false,
-        sort: false,
-        options: {
-          customBodyRender: (value) => {
-            const insurance_status = value || "Unknown";
-
-            const statusColors = {
-              Cancel: "error",
-              Completed: "success",
-              Expired: "warning",
-              "Out of Town": "info",
-              Pending: "primary",
-              Unknown: "default",
-            };
-
-            return (
-              <Chip
-                label={insurance_status}
-                color={statusColors[insurance_status] || "default"}
-                size="small"
-                variant="filled"
-                sx={{
-                  fontWeight: "bold",
-                  textTransform: "capitalize",
-                }}
-              />
-            );
-          },
-        },
-      },
-
-      {
-        name: "id",
-        label: "Actions",
-        options: {
-          filter: false,
-          sort: false,
-          customBodyRender: (value) => (
-            <Tooltip title="Edit" placement="top">
-              <button
-                onClick={() => {
-                  navigate(
-                    `/policy-update/${encodeURIComponent(
-                      encryptId(value)
-                    )}/?isedit=true`
-                  );
-                }}
-                className="text-gray-500 hover:text-accent-500 transition-colors"
-              >
-                <IconEdit className="text-gray-500 hover:text-accent-500 transition-colors w-5 h-5" />
-              </button>
-            </Tooltip>
-          ),
-        },
-      },
-    ],
-    []
+  const filteredClients = useMemo(
+    () =>
+      clientData.filter((client) =>
+        client.client_name.toLowerCase().includes(searchTerm.toLowerCase())
+      ),
+    [clientData, searchTerm]
   );
 
-  // Table options
-  const options = {
-    selectableRows: "none",
-    elevation: 0,
-    responsive: "standard",
-    viewColumns: false,
-    download: false,
-    print: false,
-    textLabels: {
-      body: {
-        noMatch: loading ? <LoaderComponent /> : "Sorry, no data available",
-      },
-    },
-    setRowProps: (row) => ({
-      className: "hover:bg-gray-50 transition-colors",
-    }),
-    setTableProps: () => ({
-      className: "rounded-lg shadow-sm border border-gray-200",
-    }),
-  };
-
-  // const data = useMemo(() => policyData, [policyData]);
-  const client = policyData?.client || {};
   return (
-    <Layout>
-      <div className="p-2 bg-gray-50 min-h-screen space-y-3">
-        <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
-          <MUIDataTable
-            title="Policy Renewal  List"
-            data={policyData || []}
-            columns={columns}
-            options={options}
-          />
+    <div className="p-4 bg-gray-50 min-h-screen">
+      <input
+        type="text"
+        placeholder="Search client or policy"
+        className="w-full p-2 border rounded-lg"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+      {/* </div> */}
+
+      {loading ? (
+        <LoaderComponent />
+      ) : (
+        <div className="space-y-4 mt-2">
+          {filteredClients.map((client) => (
+            <div
+              key={client.id}
+              className="bg-white rounded-lg shadow-md p-4 cursor-pointer hover:shadow-lg transition"
+              onClick={() => navigate(`/policy-list/${encryptId(client.id)}`)}
+            >
+              <div className="flex justify-between items-center">
+                <div>
+                  <h3 className="font-bold text-lg">{client.client_name}</h3>
+                  <p className="text-gray-500">{client.client_area}</p>
+                </div>
+                <div className="text-right space-y-1">
+                  <p className="text-sm font-medium text-[#4894FE]">
+                    {client.client_type}
+                  </p>
+                  <p className="text-xs text-yellow-400 flex items-center gap-1">
+                    <IconCalendar size={16} />{" "}
+                    {moment(client.client_create_date).format("DD MMM, YYYY")}
+                  </p>
+                </div>
+              </div>
+
+              <hr className="my-2 border-gray-300" />
+
+              <div className="flex justify-between items-center">
+                <p className="text-sm text-gray-400">
+                  {client.insurance_count} Policies
+                </p>
+                <p className="flex space-x-2 items-center">
+                  <IconPhone className="text-[#4894FE]" />
+                  <IconCircleChevronRight className="text-gray-400" />
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
-      </div>
-      {/* <UpdatePolicyRenewal
-        setFormData={setFormData}
-        formData={setFormData}
-        loading={loadingdata}
-        setOpenDialog={setOpenDialog}
-        open={openDialog}
-        onClose={() => setOpenDialog(false)}
-      /> */}
-    </Layout>
+      )}
+
+      {/* <button
+        className="fixed bottom-5 right-0 bg-blue-500 text-white rounded-l-full p-3 shadow-lg flex items-center gap-2"
+        onClick={() => navigate("/client-create")}
+      >
+        <IconPlus size={20} /> Add New
+      </button> */}
+      <ButtonConfigColor
+        className="fixed bottom-5 right-0 bg-blue-500 text-white rounded-l-full p-3 shadow-lg flex items-center gap-2 w-32"
+        type={"button"}
+        buttontype={"create"}
+        onClick={() => navigate("/client-create")}
+        label={"Add Client"}
+      />
+    </div>
   );
 };
 
-export default PolicyRenewalList;
+export default ClientList;

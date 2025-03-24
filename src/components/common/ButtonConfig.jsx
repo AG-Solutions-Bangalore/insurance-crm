@@ -15,16 +15,16 @@ const ButtonConfigColor = ({
   const getButtonStyles = () => {
     switch (buttontype) {
       case "submit":
-        return "px-6 py-2 text-sm font-medium text-white bg-gradient-to-r from-accent-500 via-accent-500 to-accent-400 rounded-lg shadow-md hover:from-accent-600 hover:via-accent-600 hover:to-accent-600 transition-all duration-300 ease-in-out transform hover:scale-105";
+        return "px-6 py-2 text-sm font-medium text-white bg-gradient-to-r from-[#8B78FF] via-[#8B78FF] to-[#8B78FF] rounded-lg shadow-md hover:from-[#8B78FF] hover:via-[#5451D6] hover:to-[#5451D6] transition-all duration-300 ease-in-out transform hover:scale-105";
       case "back":
         return "px-6 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-200 transition-all duration-300 ease-in-out transform hover:scale-105";
       case "create":
-        return "px-6 py-2 text-sm font-medium text-white bg-gradient-to-r from-red-500 via-accent-500 to-accent-400 rounded-lg shadow-md hover:from-accent-600 hover:via-accent-600 hover:to-accent-600 transition-all duration-300 ease-in-out transform hover:scale-105";
+        return "px-6 py-2 text-sm font-medium text-white bg-gradient-to-r from-[#8B78FF] via-[#8B78FF] to-[#8B78FF] rounded-lg shadow-md hover:from-[#8B78FF] hover:via-[#5451D6] hover:to-[#5451D6] transition-all duration-300 ease-in-out transform hover:scale-105";
       case "update":
-        return "px-6 py-2 text-sm font-medium text-white bg-gradient-to-r from-accent-500 via-accent-500 to-accent-400 rounded-lg shadow-md hover:from-accent-600 hover:via-accent-600 hover:to-accent-600 transition-all duration-300 ease-in-out transform hover:scale-105";
+        return "px-6 py-2 text-sm font-medium text-white bg-gradient-to-r from-[#8B78FF] via-[#8B78FF] to-[#8B78FF] rounded-lg shadow-md hover:from-[#8B78FF] hover:via-[#5451D6] hover:to-[#5451D6] transition-all duration-300 ease-in-out transform hover:scale-105";
 
       case "normal":
-        return "px-6 py-2 text-sm font-medium text-white bg-gradient-to-r from-accent-500 via-accent-500 to-accent-400 rounded-lg shadow-md hover:from-accent-600 hover:via-accent-600 hover:to-accent-600 transition-all duration-300 ease-in-out transform hover:scale-105";
+        return "px-6 py-2 text-sm font-medium text-white bg-gradient-to-r from-[#8B78FF] via-[#8B78FF] to-[#8B78FF] rounded-lg shadow-md hover:from-[#8B78FF] hover:via-[#5451D6] hover:to-[#5451D6] transition-all duration-300 ease-in-out transform hover:scale-105";
       default:
         return "bg-blue-400 hover:bg-blue-500 text-white";
     }
