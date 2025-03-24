@@ -1,6 +1,7 @@
 import {
   IconCalendar,
   IconCircleChevronRight,
+  IconEdit,
   IconPhone,
 } from "@tabler/icons-react";
 import moment from "moment";
@@ -13,6 +14,7 @@ import { NoDataCard } from "../../components/common/NoDataCard";
 import Layout from "../../components/Layout";
 import { CLIENT_LIST } from "../api/UseApi";
 import TextField from "../../components/common/InputField";
+import { Chip, Tooltip } from "@mui/material";
 
 const ClientList = () => {
   const [clientData, setClientData] = useState([]);
@@ -44,6 +46,7 @@ const ClientList = () => {
         client.client_mobile.toLowerCase().includes(lowerSearchTerm) ||
         client.client_area.toLowerCase().includes(lowerSearchTerm) ||
         client.client_type.toLowerCase().includes(lowerSearchTerm) ||
+        client.client_status.toLowerCase().includes(lowerSearchTerm) ||
         moment(client.client_create_date)
           .format("DD MMM, YYYY")
           .toLowerCase()
@@ -98,15 +101,48 @@ const ClientList = () => {
                   <div className="flex justify-between items-center">
                     <p className="text-sm text-gray-400">
                       {client.insurance_count} Policies
+                      <Chip
+                        label={client.client_status}
+                        color={
+                          client.client_status === "Active"
+                            ? "success"
+                            : "default"
+                        }
+                        size="small"
+                        variant="filled"
+                        sx={{
+                          fontWeight: "bold",
+                          textTransform: "capitalize",
+                          marginLeft: "5px",
+                        }}
+                      />
                     </p>
                     <p className="flex space-x-2 items-center">
+                      <Tooltip title="Edit" placement="top">
+                        <button
+                          onClick={() => {
+                            navigate(
+                              `/client-update/${encodeURIComponent(
+                                encryptId(client.id)
+                              )}/?isedit=true`
+                            );
+                          }}
+                          className="text-gray-500 hover:text-accent-500 transition-colors"
+                        >
+                          <IconEdit className="text-[#4894FE]" />
+                        </button>
+                      </Tooltip>
                       <a href={`tel:${client.client_mobile}`}>
                         <IconPhone className="text-[#4894FE]" />
                       </a>
                       <IconCircleChevronRight
                         className="text-gray-400 cursor-pointer"
                         onClick={() =>
-                          navigate(`/policy-list/${encryptId(client.id)}`)
+                          navigate(
+                            `/policy-list/${encodeURIComponent(
+                              encryptId(client.id)
+                            )}`
+                          )
                         }
                       />
                     </p>

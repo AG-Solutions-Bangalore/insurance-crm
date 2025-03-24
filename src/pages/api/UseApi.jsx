@@ -32,7 +32,7 @@ const apiRequest = async (method, endpoint, data = null) => {
 export const FETCH_DASHBOARD_DATA = () =>
   apiRequest("GET", `/panel-fetch-dashboard`);
 export const PANEL_CHECK = () => apiRequest("GET", `/panel-check-status`);
-export const CHNAGE_PASSWORD = (data) =>
+export const CHANGE_PASSWORD = (data) =>
   apiRequest("POST", `/panel-change-password`, data);
 export const PANEL_LOGIN = (data) => apiRequest("POST", `/panel-login`, data);
 export const FORGOT_PASSWORD = (mobile) =>

@@ -5,14 +5,12 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import * as Yup from "yup";
-import siginLogo from "../../assets/kmrlive.png";
-import { ButtonCss } from "../../components/common/ButtonCss";
+import ButtonConfigColor from "../../components/common/ButtonConfig";
 import {
   decryptData,
   encryptData,
 } from "../../components/common/EncryptionDecryption";
 import { PANEL_LOGIN } from "../api/UseApi";
-import { FormLabel } from "@mui/material";
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -35,18 +33,18 @@ const SignIn = () => {
     },
     validationSchema,
     validateOnBlur: true,
-    validateOnChange: true, 
+    validateOnChange: true,
     onSubmit: async (values, { setSubmitting }) => {
-      console.log("Submitting:", values); 
+      console.log("Submitting:", values);
       if (!formik.isValid) {
         console.log("Validation Failed:", formik.errors);
-        return; 
+        return;
       }
 
       setIsLoading(true);
       try {
         const response = await PANEL_LOGIN(values);
-    const data = response.data;
+        const data = response.data;
         if (response.status == 200 && data.data.token) {
           const token = data.data.token;
           const username = data.data.user.name;
@@ -107,7 +105,7 @@ const SignIn = () => {
   return (
     <div className="min-h-screen flex">
       {/* Left Side - Image Section */}
-      <div className="hidden lg:flex w-1/2 bg-gradient-to-br from-accent-500 to-accent-600 relative">
+      <div className="hidden lg:flex w-1/2 bg-gradient-to-br from-[#bab2f3] to-[#8B78FF]  relative">
         <div className="absolute inset-0 flex flex-col justify-center items-center text-white p-12">
           <h2 className="text-4xl font-bold mb-4">Welcome Back</h2>
           <p className="text-lg text-center">
@@ -151,7 +149,6 @@ const SignIn = () => {
                 id="mobile"
                 name="mobile"
                 value={formik.values.mobile}
-                // onChange={formik.handleChange}
                 onChange={(e) => {
                   const { value } = e.target;
                   if (/^\d{0,10}$/.test(value)) {
@@ -159,7 +156,7 @@ const SignIn = () => {
                   }
                 }}
                 onBlur={formik.handleBlur}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-accent-500 transition-colors placeholder-gray-400"
+                className="w-full bg-white text-gray-800 text-sm border-l-4 border border-gray-300 rounded-lg px-4 py-2 transition-all duration-300 ease-in-out focus:outline-none focus:border-l-4 focus:border-[#8B78FF] focus:ring-0 shadow-sm hover:shadow-md border-l-gray-300 border-r-gray-300"
                 placeholder="Enter your Mobile Number"
               />
               {formik.touched.mobile && formik.errors.mobile && (
@@ -181,7 +178,7 @@ const SignIn = () => {
                   value={formik.values.password}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-accent-500 transition-colors placeholder-gray-400"
+                  className="w-full bg-white text-gray-800 text-sm border-l-4 border border-gray-300 rounded-lg px-4 py-2 transition-all duration-300 ease-in-out focus:outline-none focus:border-l-4 focus:border-[#8B78FF] focus:ring-0 shadow-sm hover:shadow-md border-l-gray-300 border-r-gray-300"
                   placeholder="Enter your password"
                 />
                 <button
@@ -217,18 +214,26 @@ const SignIn = () => {
               <Link
                 tabIndex={-1}
                 to="/forget-password"
-                className="text-sm text-accent-500 hover:text-accent-600"
+                className="text-sm text-[#8B78FF] hover:text-[#7661f9]"
               >
                 Forgot Password?
               </Link>
             </div>
-            <button
+            {/* <button
               type="submit"
               disabled={isLoading}
               className={`${ButtonCss} w-full`}
             >
               {isLoading ? "Signing In..." : "Sign In"}
-            </button>
+            </button> */}
+
+            <ButtonConfigColor
+              loading={isLoading}
+              type="submit"
+              buttontype="normal"
+              label={isLoading ? "Signing In..." : "Sign In"}
+              className="w-full"
+            />
           </form>
         </div>
       </div>

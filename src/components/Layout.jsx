@@ -7,7 +7,7 @@ const Layout = ({ children }) => {
       <Navbar />
       <MobileBottomNav />
       <main className="transition-all duration-300 md:pt-16 md:px-4">
-        <div className="p-6 relative md:mx-1">{children}</div>
+        <div className=" p-4 md:p-6 relative md:mx-1">{children}</div>
       </main>
     </div>
   );

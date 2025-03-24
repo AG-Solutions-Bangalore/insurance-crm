@@ -9,10 +9,7 @@ import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import ButtonConfigColor from "../../components/common/ButtonConfig";
 import TextField from "../../components/common/InputField";
-import {
-  INSURANCE_STATUS,
-  UPDATE_POLICY_RENEWAL
-} from "../api/UseApi";
+import { INSURANCE_STATUS, UPDATE_POLICY_RENEWAL } from "../api/UseApi";
 
 const UpdatePolicyRenewal = ({
   formData,
@@ -83,6 +80,8 @@ const UpdatePolicyRenewal = ({
             required
             width="full"
           />
+
+   
           <TextField
             label="Status"
             name="insurance_status"
@@ -104,7 +103,7 @@ const UpdatePolicyRenewal = ({
               loading={loading}
               type="submit"
               buttontype="submit"
-              label={"Submit"}
+              label={"Update"}
             />
             <ButtonConfigColor
               type="button"
