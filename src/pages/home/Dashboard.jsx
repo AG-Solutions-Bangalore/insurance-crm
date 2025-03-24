@@ -117,7 +117,7 @@ const Dashboard = () => {
               {pendingRenewals.map((renewal, index) => (
                 <div
                   key={index}
-                  className={`p-4 rounded-xl text-white shadow-md text-center bg-gradient-to-r ${renewal.color}`}
+                  className={`p-4 rounded-xl  text-white shadow-md text-center bg-gradient-to-r ${renewal.color}`}
                 >
                   <h2 className="text-3xl font-bold">
                     <CountUp start={0} end={renewal.value} duration={2} />

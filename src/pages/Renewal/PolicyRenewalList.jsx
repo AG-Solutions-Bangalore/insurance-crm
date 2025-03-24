@@ -194,7 +194,7 @@ const PolicyRenewalList = () => {
 
         {/* 🔹 Add New Client Button */}
         <ButtonConfigColor
-          className="fixed bottom-20 right-0 bg-blue-500 text-white rounded-l-full p-3 shadow-lg flex items-center gap-2 w-32"
+          className="fixed bottom-24 right-0 bg-blue-500 text-white rounded-l-full p-3 shadow-lg flex items-center gap-2 w-32"
           type={"button"}
           buttontype={"create"}
           onClick={() => navigate("/client-create")}
