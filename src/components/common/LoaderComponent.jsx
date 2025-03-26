@@ -1,6 +1,8 @@
 // import "ldrs/lineSpinner";
 // import React from "react";
 
+import { Spinner } from "@radix-ui/themes";
+
 // const LoaderComponent = () => {
 //   return (
 //     <div className="flex justify-center items-center h-96">
@@ -16,7 +18,6 @@
 // };
 
 // export default LoaderComponent;
-import { Spinner } from "@radix-ui/themes";
 
 const LoaderComponent = () => {
   return (
