@@ -18,7 +18,7 @@ import { Chip, Tooltip } from "@mui/material";
 
 const ClientList = () => {
   const [clientData, setClientData] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
@@ -30,8 +30,6 @@ const ClientList = () => {
         setClientData(response?.data?.client || []);
       } catch (error) {
         console.error("Error fetching client data:", error);
-      } finally {
-        setLoading(false);
       }
     };
     fetchClients();
@@ -69,7 +67,7 @@ const ClientList = () => {
         {loading ? (
           <LoaderComponent />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4 text-[12px] md:text-sm">
             {filteredClients.length > 0 ? (
               filteredClients.map((client) => (
                 <div
@@ -78,16 +76,14 @@ const ClientList = () => {
                 >
                   <div className="flex justify-between items-center">
                     <div>
-                      <h3 className="font-bold text-lg">
-                        {client.client_name}
-                      </h3>
+                      <h3 className="font-bold">{client.client_name}</h3>
                       <p className="text-gray-500">{client.client_area}</p>
                     </div>
                     <div className="text-right space-y-1">
-                      <p className="text-sm font-medium text-[#4894FE]">
+                      <p className="font-medium text-[#4894FE]">
                         {client.client_type}
                       </p>
-                      <p className="text-xs text-yellow-400 flex items-center gap-1">
+                      <p className="text-[#ed6c02] flex items-center gap-1">
                         <IconCalendar size={16} />{" "}
                         {moment(client.client_create_date).format(
                           "DD MMM, YYYY"
@@ -99,7 +95,7 @@ const ClientList = () => {
                   <hr className="my-2 border-gray-300" />
 
                   <div className="flex justify-between items-center">
-                    <p className="text-sm text-gray-400">
+                    <p className=" text-gray-400">
                       {client.insurance_count} Policies
                       <Chip
                         label={client.client_status}

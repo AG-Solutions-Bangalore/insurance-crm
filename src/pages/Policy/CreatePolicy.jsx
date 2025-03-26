@@ -11,6 +11,7 @@ import PageHeader from "../../components/common/PageHeader";
 import PageLayout from "../../components/common/PageLayout";
 import Layout from "../../components/Layout";
 import {
+  CLIENT_TYPE,
   CREATE_POLICY,
   FETCH_POLICY_BY_ID,
   INSURANCE_STATUS,
@@ -24,6 +25,8 @@ const CreatePolicy = () => {
   const [policystatus, setPolicyStatus] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingdata, setLoadingData] = useState(false);
+  const [clienttype, setClientType] = useState([]);
+
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -109,7 +112,18 @@ const CreatePolicy = () => {
       fetchPolicyById();
     }
   }, [isEditing, decryptedId]);
+  useEffect(() => {
+    const fetchClientTypes = async () => {
+      try {
+        const response = await CLIENT_TYPE();
+        setClientType(response?.data?.clientType || []);
+      } catch (error) {
+        console.error("Error fetching client types:", error);
+      }
+    };
 
+    fetchClientTypes();
+  }, []);
   // Handle form submission
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -188,7 +202,7 @@ const CreatePolicy = () => {
                 <TextField
                   label="Policy Premium"
                   name="insurance_policy_type"
-                  placeholder="Enter Policy Type..."
+                  placeholder="Enter Policy Premium..."
                   value={formData.insurance_policy_type}
                   onChange={handleChange}
                   required
@@ -223,13 +237,27 @@ const CreatePolicy = () => {
                 )}
                 {!isEditing && (
                   <>
-                    <TextField
+                    {/* <TextField
                       label="Policy From"
                       name="insurance_from"
                       placeholder="Enter  Policy From..."
                       value={formData.insurance_from}
                       onChange={handleChange}
                       required
+                    /> */}
+
+                    <TextField
+                      label="Policy From"
+                      name="insurance_from"
+                      type="select"
+                      placeholder="Enter  Policy From..."
+                      value={formData.insurance_from}
+                      onChange={handleChange}
+                      required
+                      options={clienttype.map((type) => ({
+                        value: type.client_type,
+                        label: type.client_type,
+                      }))}
                     />
 
                     <TextField

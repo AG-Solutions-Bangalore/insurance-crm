@@ -103,7 +103,7 @@ const MobileBottomNav = () => {
 
   return (
     <>
-      <div className="fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-md pt-3 flex justify-around items-center rounded-t-2xl shadow-xl z-50 h-[75px] transition-all duration-300 my-1">
+      <div className="fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-md pt-3 flex justify-around items-center rounded-t-2xl shadow-xl z-50 h-[75px] transition-all duration-300 ">
         {[
           { name: "home", icon: <IconHome size={24} />, path: ["/home"] },
           {

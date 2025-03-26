@@ -3,6 +3,7 @@ import {
   IconCalendar,
   IconCalendarMonth,
   IconCircleChevronRight,
+  IconPhone,
 } from "@tabler/icons-react";
 import moment from "moment";
 import React, { useEffect, useMemo, useState } from "react";
@@ -134,26 +135,25 @@ const PolicyRenewalList = () => {
         {loading ? (
           <LoaderComponent />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4 text-[12px] md:text-sm">
             {filteredClients.length > 0 ? (
               filteredClients.map((client) => (
                 <div
                   key={client.id}
                   className="bg-white rounded-lg shadow-md p-4 cursor-pointer hover:shadow-lg transition"
                 >
-                  <div className="flex justify-between items-center text-sm">
+                  <div className="flex justify-between items-center">
                     <div>
                       <h3 className="font-bold">{client.client_name}</h3>
-                      <p className="text-gray-500">{client.client_mobile}</p>
+                      <p className="text-gray-500">{client.insurance_type}</p>
                     </div>
                     <div className="text-right space-y-1">
                       <p className=" text-blue-400 flex items-center gap-1">
-                        <IconCalendarMonth size={16} />{" "}
-                        {moment(client.insurance_from).format("DD MMM, YYYY")}
+                        {client.insurance_from}
                       </p>
-                      <p className=" text-yellow-400 flex items-center gap-1">
+                      <p className=" text-[#ed6c02] flex items-center gap-1">
                         <IconCalendar size={16} />{" "}
-                        {moment(client.client_create_date).format(
+                        {moment(client.insurance_expire_date).format(
                           "DD MMM, YYYY"
                         )}
                       </p>
@@ -162,8 +162,16 @@ const PolicyRenewalList = () => {
 
                   <hr className="my-2 border-gray-300" />
 
-                  <div className="flex justify-between items-center">
-                    <p className="text-sm text-gray-400">
+                  <div className="flex justify-between items-center text-[12px] md:text-sm">
+                    <p className="flex items-center text-blue-400">
+                      <IconCalendar size={16} />{" "}
+                      {client.insurance_followup_date
+                        ? moment(client.insurance_followup_date).format(
+                            "DD MMM, YYYY"
+                          )
+                        : "-"}
+                    </p>
+                    <p className=" text-gray-400">
                       <Chip
                         label={client.insurance_status}
                         color={
@@ -178,10 +186,15 @@ const PolicyRenewalList = () => {
                       />
                     </p>
                     <p className="flex space-x-2 items-center">
-                      <IconCircleChevronRight
-                        className="text-gray-400 cursor-pointer"
-                        onClick={() => handleEdit(client.id)}
-                      />
+                      <a href={`tel:${client.client_mobile}`}>
+                        <IconPhone className="text-[#4894FE]" />
+                      </a>
+                      <p className="flex space-x-2 items-center">
+                        <IconCircleChevronRight
+                          className="text-gray-400 cursor-pointer"
+                          onClick={() => handleEdit(client.id)}
+                        />
+                      </p>
                     </p>
                   </div>
                 </div>

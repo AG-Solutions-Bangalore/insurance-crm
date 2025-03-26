@@ -39,7 +39,7 @@ const ClientProfile = ({ client, policies }) => {
   };
   return (
     <>
-      <div className=" rounded-xl space-y-2 py-2 md:mt-16 text-[10px] md:text-sm">
+      <div className=" rounded-xl space-y-2 py-2 md:mt-16 text-[12px] md:text-sm">
         <div className="p-2">
           <h2 className="text-xl font-bold text-end">
             <button
@@ -163,7 +163,7 @@ const ClientProfile = ({ client, policies }) => {
                       <span className="text-[#6E6A7C]">Premium:</span>{" "}
                       <p> {policy?.insurance_policy_type}</p>
                     </p>
-                    {policy?.insurance_policy_type == "Vehicle" && (
+                    {policy?.insurance_type == "Vehicle Insurance" && (
                       <>
                         <p className="text-black">
                           <span className="text-[#6E6A7C]">Vehicle No:</span>{" "}
