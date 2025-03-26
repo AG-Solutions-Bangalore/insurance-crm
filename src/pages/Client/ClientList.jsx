@@ -78,9 +78,7 @@ const ClientList = () => {
                 >
                   <div className="flex justify-between items-center">
                     <div>
-                      <h3 className="font-bold">
-                        {client.client_name}
-                      </h3>
+                      <h3 className="font-bold">{client.client_name}</h3>
                       <p className="text-gray-500">{client.client_area}</p>
                     </div>
                     <div className="text-right space-y-1">

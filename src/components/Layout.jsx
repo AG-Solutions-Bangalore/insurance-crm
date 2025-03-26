@@ -7,7 +7,7 @@ const Layout = ({ children }) => {
       <Navbar />
 
       <main className="flex-1  md:pt-16 pb-16 px-4 md:px-6 transition-all duration-300">
-        <div className="py-5 md:p-6">{children}</div>
+        <div className="py-5 mb-16 md:p-6">{children}</div>
       </main>
 
       <MobileBottomNav />
