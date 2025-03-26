@@ -3,12 +3,14 @@ import MobileBottomNav from "./common/Navbar/MobileBottomNav";
 
 const Layout = ({ children }) => {
   return (
-    <div className="min-h-screen bg-purple-100">
+    <div className="flex flex-col min-h-screen bg-purple-100">
       <Navbar />
-      <MobileBottomNav />
-      <main className="transition-all duration-300 md:pt-16 md:px-4">
-        <div className=" p-4 md:p-6 relative md:mx-1">{children}</div>
+
+      <main className="flex-1  md:pt-16 pb-16 px-4 md:px-6 transition-all duration-300">
+        <div className="py-5 md:p-6">{children}</div>
       </main>
+
+      <MobileBottomNav />
     </div>
   );
 };

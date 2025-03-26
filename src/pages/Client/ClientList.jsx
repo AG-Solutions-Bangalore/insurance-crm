@@ -18,7 +18,7 @@ import { Chip, Tooltip } from "@mui/material";
 
 const ClientList = () => {
   const [clientData, setClientData] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
@@ -30,8 +30,6 @@ const ClientList = () => {
         setClientData(response?.data?.client || []);
       } catch (error) {
         console.error("Error fetching client data:", error);
-      } finally {
-        setLoading(false);
       }
     };
     fetchClients();
@@ -78,9 +76,7 @@ const ClientList = () => {
                 >
                   <div className="flex justify-between items-center">
                     <div>
-                      <h3 className="font-bold">
-                        {client.client_name}
-                      </h3>
+                      <h3 className="font-bold">{client.client_name}</h3>
                       <p className="text-gray-500">{client.client_area}</p>
                     </div>
                     <div className="text-right space-y-1">
