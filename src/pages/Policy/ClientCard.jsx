@@ -2,13 +2,11 @@ import {
   IconCalendarWeek,
   IconMail,
   IconMapPin,
-  IconPhone
+  IconPhone,
 } from "@tabler/icons-react";
 import moment from "moment";
 import React from "react";
-import {
-  FaArrowLeft
-} from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import ButtonConfigColor from "../../components/common/ButtonConfig";
 import EmailContent from "../../components/common/Emailcontent";
@@ -36,13 +34,13 @@ const ClientProfile = ({ client, policies }) => {
       case "Vehicle":
         return "linear-gradient(to bottom, #FFA0BC, #FF1B5E)";
       default:
-        return "linear-gradient(to bottom, #E0E0E0, #A0A0A0)"; // Default fallback color
+        return "linear-gradient(to bottom, #E0E0E0, #A0A0A0)";
     }
   };
   return (
     <>
-      <div className=" rounded-xl space-y-2 py-2 md:mt-16">
-        <div className="p-2 text-xs">
+      <div className=" rounded-xl space-y-2 py-2 md:mt-16 text-[10px] md:text-sm">
+        <div className="p-2">
           <h2 className="text-xl font-bold text-end">
             <button
               onClick={() => navigate(-1)}
@@ -86,7 +84,7 @@ const ClientProfile = ({ client, policies }) => {
         <hr></hr>
         <div className="flex justify-between items-center">
           <p className="text-xs text-gray-400 ml-4 flex-1">
-            {policies.length > 1 ? policies.length : "0"} Policies
+            {policies.length >= 1 ? policies.length : "0"} Policies
           </p>
           <ButtonConfigColor
             className="bg-blue-500 text-white rounded-l-full p-3 shadow-lg flex justify-end gap-2 w-32"
@@ -114,7 +112,7 @@ const ClientProfile = ({ client, policies }) => {
                   <div className="flex-1 border-t border-[#8B78FF] mt-2"></div>
                 </div>
                 <div
-                  className=" p-4 rounded-lg shadow-md text-[10px]"
+                  className=" p-4 rounded-lg shadow-md text-[10px] md:text-sm"
                   style={{ background: getInsuranceBg(policy.insurance_type) }}
                 >
                   <div className=" grid grid-cols-3 gap-2">
@@ -155,16 +153,32 @@ const ClientProfile = ({ client, policies }) => {
 
                     <p className="text-black">
                       <span className="text-[#6E6A7C]">Policy Holder:</span>{" "}
-                      <p> {policy?.insurance_policy_company}</p>
+                      <p> {client?.client_name}</p>
                     </p>
                     <p className="text-black">
                       <span className="text-[#6E6A7C]">Premium Amount:</span>{" "}
-                      <p> {policy?.insurance_policy_company}</p>
+                      <p> {policy?.insurance_policy_amount}</p>
                     </p>
                     <p className="text-black">
                       <span className="text-[#6E6A7C]">Premium:</span>{" "}
-                      <p> {policy?.insurance_policy_company}</p>
+                      <p> {policy?.insurance_policy_type}</p>
                     </p>
+                    {policy?.insurance_policy_type == "Vehicle" && (
+                      <>
+                        <p className="text-black">
+                          <span className="text-[#6E6A7C]">Vehicle No:</span>{" "}
+                          <p> {policy?.insurance_vehicle_no}</p>
+                        </p>
+                        <p className="text-black">
+                          <span className="text-[#6E6A7C]">Vehicle Make:</span>{" "}
+                          <p> {policy?.insurance_make}</p>
+                        </p>
+                        <p className="text-black">
+                          <span className="text-[#6E6A7C]">Vehicle Model:</span>{" "}
+                          <p> {policy?.insurance_model}</p>
+                        </p>
+                      </>
+                    )}
                   </div>
 
                   <div className="flex justify-between items-center mt-2">
@@ -172,6 +186,7 @@ const ClientProfile = ({ client, policies }) => {
                     <p className="text-white">{policy?.insurance_from}</p>
 
                     <p className="text-white ">
+                      Expiery Date :
                       {moment(policy.insurance_expire_date).format(
                         "DD/MM/YYYY"
                       )}
