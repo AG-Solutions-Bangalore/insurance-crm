@@ -72,9 +72,9 @@ const UpdatePolicyRenewal = ({
         <DialogContent>
           <TextField
             type="date"
-            label="Insurance Date"
+            label="Follow Up Date"
             name="insurance_followup_date"
-            placeholder="Enter Insurance Date..."
+            placeholder="Enter Follow Up Date..."
             value={formData.insurance_followup_date}
             onChange={handleChange}
             required
