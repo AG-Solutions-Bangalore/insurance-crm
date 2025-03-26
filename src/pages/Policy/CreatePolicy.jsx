@@ -149,9 +149,9 @@ const CreatePolicy = () => {
                 {!isEditing && (
                   <TextField
                     type="select"
-                    label="Insurance Type"
+                    label="Policy Type"
                     name="insurance_type"
-                    placeholder="Enter Insurance Type..."
+                    placeholder="Enter Policy Type..."
                     value={formData.insurance_type}
                     options={insurancetype.map((type) => ({
                       value: type.insurance_type,
@@ -186,46 +186,62 @@ const CreatePolicy = () => {
                   required
                 />
                 <TextField
-                  label="Policy Type"
+                  label="Policy Premium"
                   name="insurance_policy_type"
                   placeholder="Enter Policy Type..."
                   value={formData.insurance_policy_type}
                   onChange={handleChange}
                   required
                 />
-                <TextField
-                  label="Vehicle No"
-                  name="insurance_vehicle_no"
-                  placeholder="Enter Vehicle No..."
-                  value={formData.insurance_vehicle_no}
-                  onChange={handleChange}
-                  required
-                />
-                <TextField
-                  label="Insurance Make"
-                  name="insurance_make"
-                  placeholder="Enter Insurance Make..."
-                  value={formData.insurance_make}
-                  onChange={handleChange}
-                  required
-                />
-                <TextField
-                  label="Insurance Model"
-                  name="insurance_model"
-                  placeholder="Enter Insurance Model..."
-                  value={formData.insurance_model}
-                  onChange={handleChange}
-                  required
-                />
+                {formData.insurance_type == "Vehicle Insurance" && (
+                  <>
+                    <TextField
+                      label="Vehicle No"
+                      name="insurance_vehicle_no"
+                      placeholder="Enter Vehicle No..."
+                      value={formData.insurance_vehicle_no}
+                      onChange={handleChange}
+                      required
+                    />
+                    <TextField
+                      label="Vehicle Make"
+                      name="insurance_make"
+                      placeholder="Enter Vehicle Make..."
+                      value={formData.insurance_make}
+                      onChange={handleChange}
+                      required
+                    />
+                    <TextField
+                      label="Vehicle Model"
+                      name="insurance_model"
+                      placeholder="Enter Vehicle Model..."
+                      value={formData.insurance_model}
+                      onChange={handleChange}
+                      required
+                    />
+                  </>
+                )}
                 {!isEditing && (
-                  <TextField
-                    label="Insurance From"
-                    name="insurance_from"
-                    placeholder="Enter  Insurance From..."
-                    value={formData.insurance_from}
-                    onChange={handleChange}
-                    required
-                  />
+                  <>
+                    <TextField
+                      label="Policy From"
+                      name="insurance_from"
+                      placeholder="Enter  Policy From..."
+                      value={formData.insurance_from}
+                      onChange={handleChange}
+                      required
+                    />
+
+                    <TextField
+                      type="date"
+                      label="Create Date"
+                      name="insurance_create_date"
+                      placeholder="Enter Create Date..."
+                      value={formData.insurance_create_date}
+                      onChange={handleChange}
+                      required
+                    />
+                  </>
                 )}
                 <TextField
                   type="date"
@@ -236,17 +252,7 @@ const CreatePolicy = () => {
                   onChange={handleChange}
                   required
                 />
-                {!isEditing && (
-                  <TextField
-                    type="date"
-                    label="Create Date"
-                    name="insurance_create_date"
-                    placeholder="Enter Create Date..."
-                    value={formData.insurance_create_date}
-                    onChange={handleChange}
-                    required
-                  />
-                )}
+
                 {isEditing && (
                   <TextField
                     label="Status"

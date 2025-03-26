@@ -168,6 +168,7 @@ const CreateClient = () => {
                     name="client_status"
                     type="select"
                     placeholder="Choose Client Status"
+                    required
                     value={formData.client_status}
                     onChange={handleChange}
                     options={[

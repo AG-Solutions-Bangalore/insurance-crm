@@ -16,6 +16,7 @@
     "@mui/icons-material": "^6.4.8",
     "@mui/joy": "^5.0.0-beta.48",
     "@mui/material": "^5.16.7",
+    "@radix-ui/themes": "^3.2.1",
     "@tabler/icons-react": "^3.31.0",
     "axios": "^1.7.7",
     "crypto-js": "^4.2.0",
