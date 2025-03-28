@@ -9,10 +9,11 @@ import PolicyList from "./pages/Policy/PolicyList";
 import CreatePolicy from "./pages/Policy/CreatePolicy";
 import PolicyRenewalList from "./pages/Renewal/PolicyRenewalList";
 import ValidationWrapper from "./components/common/ValidationWrapper";
+import DisableRightClick from "./components/common/DisableRightClick";
 function App() {
   return (
     <>
-      {/* <DisableRightClick /> */}
+      <DisableRightClick />
       <Toaster richColors position="top-right" />
       <ValidationWrapper>
         <Routes>
