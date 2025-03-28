@@ -9,6 +9,7 @@ import ButtonConfigColor from "../../components/common/ButtonConfig";
 import {
   decryptData,
   encryptData,
+  validateEnvironment,
 } from "../../components/common/EncryptionDecryption";
 import { PANEL_LOGIN } from "../api/UseApi";
 
@@ -40,7 +41,16 @@ const SignIn = () => {
         console.log("Validation Failed:", formik.errors);
         return;
       }
-
+      try {
+        validateEnvironment();
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Invalid environment detected!",
+          variant: "destructive",
+        });
+        return;
+      }
       setIsLoading(true);
       try {
         const response = await PANEL_LOGIN(values);
@@ -71,10 +81,6 @@ const SignIn = () => {
           const decryptedToken = decryptData(storedEncryptedToken);
           const decryptedUsername = decryptData(storedEncryptedUsername);
           const decryptedUserType = decryptData(storedEncryptedUserType);
-
-          // console.log("Decrypted Token:", decryptedToken);
-          // console.log("Decrypted Username:", decryptedUsername);
-          // console.log("Decrypted User Type:", decryptedUserType);
 
           if (
             decryptedToken === token &&
