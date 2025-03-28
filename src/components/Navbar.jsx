@@ -25,7 +25,7 @@ const Navbar = ({ toggleSidebar, isSidebarOpen }) => {
   return (
     <nav className="bg-white border-b border-gray-200 fixed w-full top-0 z-50 ">
       <div className="hidden md:block">
-        <div className="px-4 h-16 flex items-center ">
+        <div className="px-4 h-16 flex items-center justify-between ">
           <div className="flex items-center">
             <svg
               width="24"
@@ -57,11 +57,11 @@ const Navbar = ({ toggleSidebar, isSidebarOpen }) => {
                 strokeLinejoin="round"
               />
             </svg>
-          </div>
-          <div className="flex flex-col ml-4">
-            <span className="text-sm font-bold text-yellow-900 leading-tight">
-              Insurance
-            </span>
+            <div className="flex flex-col ml-3">
+              <span className="text-sm font-bold text-yellow-900 leading-tight">
+                Insurance
+              </span>
+            </div>
           </div>
 
           <div className="flex items-center gap-2">
